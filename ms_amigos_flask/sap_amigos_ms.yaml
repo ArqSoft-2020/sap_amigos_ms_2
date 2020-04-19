@@ -1,0 +1,142 @@
+#Test with: http://editor.swagger.io/
+
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservice for Friends
+  description: Python + Postgres + Flask
+  license:
+    name: Software Architecture Poject Pinturillo, 2020-I
+host: host:5000
+basePath: /amigos/
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /amigos:
+    post:
+      summary: Creates a new frienship
+      operationId: createFrien
+      parameters:
+        - name: amigo
+          in: body
+          required: true
+          description: AmigosInput
+          schema:
+            $ref: '#/definitions/AmigosInput'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /amigos/{id}:
+    get:
+      summary: Returns all friends of the given id
+      operationId: getFriendsById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the user to be returned
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/AmigosList'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /amigos/{id1}/{id2}:
+    delete:
+      summary: Deletes a frindship of id1 and id2
+      operationId: deleteFrienship
+      parameters:
+        - name: id1
+          in: path
+          description: The id of the user to the frindship be deleted 
+          required: true
+          type: integer
+        - name: id2
+          in: path
+          description: TThe id of the user to the frindship be deleted 
+          required: true
+          type: integer  
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+
+
+
+definitions:
+
+  Amigos:
+    type: "object"
+    properties:
+      amigo:
+        type: "integer"
+
+  AmigosInput:
+    type: object
+    properties:
+      amigo1:
+        type: "integer"
+      amigo2:
+        type: "integer"
+
+  AmigosList:
+    type: object
+    required:
+      - amigos
+    properties:
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/Amigos'
+
+# Errors
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
+      code:
+        type: number
+      description:
+        type: object
