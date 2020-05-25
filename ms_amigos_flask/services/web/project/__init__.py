@@ -17,8 +17,8 @@ class Amigo (db.Model):
     __tablename__ = 'amigos'
     # relotion amigos attributes
     id = db.Column(db.Integer, primary_key=True)
-    amigo1 = db.Column(db.Integer)
-    amigo2 = db.Column(db.Integer)
+    amigo1 = db.Column(db.String)
+    amigo2 = db.Column(db.String)
 
     # Methohd to create a amigos relation.
     # id is not required and not suggested, used for tests.
