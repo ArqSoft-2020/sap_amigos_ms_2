@@ -1,5 +1,6 @@
 # pull official base image
 FROM python:3.8.1-slim-buster
+EXPOSE 5000
 
 # set work directory
 WORKDIR /usr/src/app
@@ -8,13 +9,13 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-ENV FLASK_APP="project/__init__.py"
-ENV FLASK_ENV="development"
-ENV DATABASE_URL="postgresql://postgres:postgres@db:5432/amigos"
-ENV SQL_HOST="db"
-ENV SQL_PORT=5432
-ENV DATABASE="postgres"
-ENV APP_FOLDER="/usr/src/app"
+ENV FLASK_APP project/__init__.py
+ENV FLASK_ENV development
+ENV DATABASE_URL postgresql://postgres:postgres@db:5432/amigos
+ENV SQL_HOST db
+ENV SQL_PORT 5432
+ENV DATABASE postgres
+ENV APP_FOLDER /usr/src/app
 
 # install system dependencies
 RUN apt-get update && apt-get install -y netcat
@@ -29,3 +30,5 @@ COPY . /usr/src/app/
 
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+
+CMD ["python", "/usr/src/app/manage.py", "run", "-h", "0.0.0.0"]
